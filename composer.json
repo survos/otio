@@ -1,0 +1,27 @@
+{
+    "name": "survos/otio",
+    "description": "Planned PHP OpenTimelineIO subset for editorial documents, timing and playback projections.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "otio",
+        "opentimelineio",
+        "timeline"
+    ],
+    "require": {
+        "php": "^8.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Survos\\Otio\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Survos\\Otio\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
