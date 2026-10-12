@@ -1,6 +1,6 @@
 {
     "name": "survos/otio",
-    "description": "Planned PHP OpenTimelineIO subset for editorial documents, timing and playback projections.",
+    "description": "PHP OpenTimelineIO document classes and time values.",
     "type": "library",
     "license": "MIT",
     "keywords": [
@@ -23,5 +23,8 @@
     },
     "config": {
         "sort-packages": true
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.4"
     }
 }

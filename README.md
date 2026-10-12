@@ -1,40 +1,35 @@
 # Survos OTIO
 
-A planned standalone PHP library for a documented subset of OpenTimelineIO: editorial documents, reliable timing, media references, and deterministic playback projections.
+Small, framework-independent PHP classes for OpenTimelineIO documents and time values.
+Requires PHP 8.5+. This is a supported subset, not the official OTIO implementation.
 
-**Status: design and Composer scaffold only.** No parser, public API, player, or automated semantic tests are implemented yet. This package is not the official OTIO implementation and is not ready for a release. PHP 8.5+ matches current sibling library conventions.
+```php
+use Survos\Otio\Timeline;
 
-The first implementation will read one upstream-generated cut/gap/trim fixture, preserve unsupported data, and verify timing against the official OTIO library. Start with [PLAN.md](PLAN.md).
-
-## Product direction
-
-A user describes a story. The application discovers and queries all relevant, authorized platform sources; selects evidenced facts, photographs, documents and recording excerpts; builds a sourced story plan; and compiles it to OTIO for browser playback. Real collection material comes first. Generated narration or illustrations are optional, labeled additions.
-
-Retrieval and AI orchestration belong to the application/integration layer. This core has no Symfony, Doctrine, network, model-provider, or React dependency. Harvest handles acquisition/normalization, ZM serves records/media, and the shared Fotostory/Voxstory application owns presentation and story logic. A thin Symfony UX bundle and Remotion adapter follow once core semantics work.
-
-## Documentation
-
-- [Plan and first acceptance test](PLAN.md)
-- [Core architecture and supported-subset design](docs/architecture.md)
-- [Prompt-to-story source retrieval](docs/source-retrieval.md)
-- [Remotion prompt-to-video reference](docs/remotion.md)
-- [Harvest, ZM and Fotostory boundaries](docs/platform-integration.md)
-- [Symfony bundle and player integration](docs/symfony-bundle.md)
-- [Gallery and reconstruction milestones](docs/gallery.md)
-- [Platform development conventions](docs/conventions.md)
-- [Sources and local evidence](docs/sources.md)
-
-These documents are the canonical development plan. The Downloads handoff is a historical/export copy. Proposed types and examples are design targets, not callable APIs.
-
-## Local checks
-
-```bash
-cd ~/sites/mono/lib/otio
-composer validate --strict
+$timeline = Timeline::fromJson(file_get_contents('story.otio'));
+foreach ($timeline->tracks()->children() as $track) {
+    foreach ($track->children() as $item) {
+        echo $item->name();
+    }
+}
+file_put_contents('copy.otio', $timeline->toJson());
 ```
 
-Use the platform's existing monolink workflow when connecting a consumer. No Packagist install command is advertised until the split repository and release exist. The package files and `lib/otio` split registration must land in the same commit.
+## Current API
 
-## License
+RationalTime, TimeRange, Timeline, Stack, Track, Clip (schema 1 and 2), Gap and
+ExternalReference. Unknown schemas use a generic Node. Imported timelines retain
+the original JSON for exact `toJson()` export; typed views are read-only.
+Constructed documents accept source arrays and JSON-serializable time values.
+This is not yet a full mutable OTIO object graph or comprehensive schema validator.
 
-MIT for this package's original work; see [LICENSE](LICENSE). Upstream fixtures and any reused frontend code retain their own notices and terms.
+The library owns document structure, traversal and time values only. It contains
+no story product, retrieval, AI, Symfony, React or playback projection. The
+[OTIO bundle](https://github.com/survos/otio-bundle) owns Remotion conversion and
+browser playback. Applications own their catalogs, story selection and media URLs.
+
+Install from Packagist with `composer require survos/otio:dev-main`.
+During development, use mono/link to connect a consumer to this source tree.
+
+See [architecture](docs/architecture.md) and [remaining work](PLAN.md).
+MIT; see LICENSE. Tests use PHPUnit; `composer install && vendor/bin/phpunit`.
